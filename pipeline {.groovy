@@ -28,11 +28,5 @@ pipeline {
                 sh 'pnpm run build'
             }
         }
-        
-        stage("Copy Files") {
-            steps {
-                sh "mv dist/* ~/Documents/${env.APP_NAME}"
-            }
-        }
     }
 }
