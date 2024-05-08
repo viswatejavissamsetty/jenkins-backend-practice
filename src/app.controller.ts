@@ -14,4 +14,9 @@ export class AppController {
   getEnv() {
     return process.env;
   }
+
+  @Get('test')
+  getTest() {
+    return 'test';
+  }
 }

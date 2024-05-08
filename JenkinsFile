@@ -22,6 +22,7 @@ pipeline {
             }
         }
 
+
         stage('Deploy') {
             steps {
                 // Stop the application if it's already running
