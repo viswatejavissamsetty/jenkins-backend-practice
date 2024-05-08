@@ -21,5 +21,15 @@ pipeline {
                 sh 'pnpm run build'
             }
         }
+
+        stage('Deploy') {
+            steps {
+                // Copy the built application to the Raspberry Pi
+                sh "sshpass -p ${PI_PASSWORD} scp -r dist ${PI_USERNAME}@${PI_HOST}:~/${APP_NAME}"
+
+                // Restart the application on the Raspberry Pi
+                sh "sshpass -p ${PI_PASSWORD} ssh ${PI_USERNAME}@${PI_HOST} 'pm2 restart ${APP_NAME}'"
+            }
+        }
     }
 }
