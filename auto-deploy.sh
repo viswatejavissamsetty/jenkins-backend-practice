@@ -9,8 +9,8 @@ while true; do
 
     # Check if there are any changes
     if git -C "$LOCAL_DIR" diff --quiet HEAD FETCH_HEAD; then
-        echo "No changes found. Sleeping for 1 minute..."
-        sleep 60
+        echo "No changes found. Sleeping for 10 seconds..."
+        sleep 10
         continue
     fi
 
@@ -19,9 +19,15 @@ while true; do
 
     # Run npm build and install commands
     cd "$LOCAL_DIR"
-    npm run build
-    npm install
+    pnpm install
+    pnpm run build
 
-    echo "Operations completed. Sleeping for 1 minute..."
-    sleep 60
+
+    pm2 stop test-app || true
+    pm2 delete test-app || true
+    pm2 start ecosystem.config.js npm --name "test-app" -- start
+
+
+    echo "Operations completed. Sleeping for 10 seconds..."
+    sleep 10
 done
