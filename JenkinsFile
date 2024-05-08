@@ -24,11 +24,11 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Copy the built application to the Raspberry Pi
-                sh "sshpass -p ${PI_PASSWORD} scp -r dist ${PI_USERNAME}@${PI_HOST}:~/${APP_NAME}"
+                // Stop the application if it's already running
+                sh "pm2 delete ${env.APP_NAME} || true"
 
-                // Restart the application on the Raspberry Pi
-                sh "sshpass -p ${PI_PASSWORD} ssh ${PI_USERNAME}@${PI_HOST} 'pm2 restart ${APP_NAME}'"
+                // Start the application using PM2
+                sh "pm2 start /dist/main.js --name ${env.APP_NAME}"
             }
         }
     }
