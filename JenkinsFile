@@ -15,12 +15,12 @@ pipeline {
         //     }
         // }
 
-        stage ('Delete existing Docker Image') {
-            steps {
-                // Delete the existing Docker image
-                sh 'docker rmi my-docker-image'
-            }
-        }
+        // stage ('Delete existing Docker Image') {
+        //     steps {
+        //         // Delete the existing Docker image
+        //         sh 'docker rmi my-docker-image'
+        //     }
+        // }
 
 
         stage('Build Docker Image') {
