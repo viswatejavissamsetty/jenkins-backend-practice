@@ -5,20 +5,20 @@ pipeline {
     stages {
         stage('Check Docker Version') {
             steps {
-                sh 'sudo docker --version'
+                sh 'docker --version'
             }
         }
 
         stage('Check Docker Info') {
             steps {
-                sh 'sudo docker info'
+                sh 'docker info'
             }
         }
 
         stage ('Delete existing Docker Image') {
             steps {
                 // Delete the existing Docker image
-                sh 'sudo docker rmi my-docker-image'
+                sh 'docker rmi my-docker-image'
             }
         }
 
@@ -26,7 +26,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 // Build the Docker image from docker file in the project root
-                sh 'sudo docker build -t my-docker-image .'
+                sh 'docker build -t my-docker-image .'
             }
         }
     }
