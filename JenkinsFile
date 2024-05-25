@@ -1,45 +1,24 @@
 pipeline {
     agent any
 
-    environment {
-        // raspberry pi deails
-        RASPBERRY_PI_IP = 'pi'
-        RASPBERRY_PI_PORT = '22'
-        RASPBERRY_PI_USER = 'pi'
-        RASPBERRY_PI_PASSWORD = '1998'
-    }
 
     stages {
-        stage ('ssh to Raspberry Pi') {
-            steps {
-                script {
-                    // ssh to Raspberry Pi
-                    sshCommand remote: [
-                        host: env.RASPBERRY_PI_IP,
-                        port: env.RASPBERRY_PI_PORT,
-                        user: env.RASPBERRY_PI_USER,
-                        password: env.RASPBERRY_PI_PASSWORD
-                    ], command: 'ls -l'
-                }
-            }
-        }
-
         stage('Check Docker Version') {
             steps {
-                sh 'docker --version'
+                sh 'sudo docker --version'
             }
         }
 
         stage('Check Docker Info') {
             steps {
-                sh 'docker info'
+                sh 'sudo docker info'
             }
         }
 
         stage ('Delete existing Docker Image') {
             steps {
                 // Delete the existing Docker image
-                sh 'docker rmi my-docker-image'
+                sh 'sudo docker rmi my-docker-image'
             }
         }
 
@@ -47,7 +26,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 // Build the Docker image from docker file in the project root
-                sh 'docker build -t my-docker-image .'
+                sh 'sudo docker build -t my-docker-image .'
             }
         }
     }
