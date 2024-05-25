@@ -1,35 +1,31 @@
 pipeline {
     agent any
 
-    environment {
-        // Define any environment variables needed for your build and deployment process
-        NODE_VERSION = '18' // Specify the Node.js version
-        NPM_VERSION = '9' // Specify the npm version
-        APP_NAME = 'DemoApp' // Specify your NestJS application name
-        PI_HOST = 'pi' // Specify the hostname or IP address of your Raspberry Pi
-        PI_USERNAME = 'pi' // Specify the username for SSH access to your Raspberry Pi
-        PI_PASSWORD = '1998' // Specify the password for SSH access to your Raspberry Pi
-    }
-
     stages {
-        stage('Build') {
+        stage('Check Docker Version') {
             steps {
-                // Set up Node.js and npm
-                sh 'pnpm install'
+                sh 'docker --version'
+            }
+        }
 
-                // Build your NestJS application
-                sh 'pnpm run build'
+        stage('Check Docker Info') {
+            steps {
+                sh 'docker info'
+            }
+        }
+
+        stage ('Delete existing Docker Image') {
+            steps {
+                // Delete the existing Docker image
+                sh 'docker rmi my-docker-image'
             }
         }
 
 
-        stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
-                // Stop the application if it's already running
-                sh "pm2 delete ${env.APP_NAME} || true"
-
-                // Start the application using PM2
-                sh "pm2 start dist/main.js --name ${env.APP_NAME}"
+                // Build the Docker image from docker file in the project root
+                sh 'docker build -t my-docker-image .'
             }
         }
     }
