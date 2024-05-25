@@ -1,0 +1,12 @@
+# Docker compose file to up the services in Dockerfile in root of this project
+version: '3.7'
+services:
+  app:
+    container_name: app
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    command: node dist/main.js

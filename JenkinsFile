@@ -9,24 +9,53 @@ pipeline {
             }
         }
 
-        // stage('Check Docker Info') {
-        //     steps {
-        //         sh 'docker info'
-        //     }
-        // }
+        stage('Check Docker Compose Version') {
+            steps {
+                sh 'docker-compose --version'
+            }
+        }
 
-        // stage ('Delete existing Docker Image') {
-        //     steps {
-        //         // Delete the existing Docker image
-        //         sh 'docker rmi my-docker-image'
-        //     }
-        // }
+        stage("Docker Compose Down") {
+            when {
+                branch 'main'
+            }
+            agent { label 'PROD' }
+            steps {
+                sh "docker-compose down"
+            }
+        }
 
+        stage("Remove old Docker images") {
+            when {
+                branch 'main'
+            }
+            agent { label 'PROD' }
+            steps {
+                script {              
+                    try {                    
+                        sh 'docker rmi \$(docker images -aq)'
+                    } catch (Exception err) {
+                        echo err.getMessage()
+                    }
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
-                // Build the Docker image from docker file in the project root
-                sh 'docker build -t my-docker-image .'
+                sh 'docker-compose build'
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
+
+        stage('Check Docker Container') {
+            steps {
+                sh 'docker ps'
             }
         }
     }
