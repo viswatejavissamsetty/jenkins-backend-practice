@@ -1,7 +1,29 @@
 pipeline {
     agent any
 
+    environment {
+        // raspberry pi deails
+        RASPBERRY_PI_IP = 'pi'
+        RASPBERRY_PI_PORT = '22'
+        RASPBERRY_PI_USER = 'pi'
+        RASPBERRY_PI_PASSWORD = '1998'
+    }
+
     stages {
+        stage ('ssh to Raspberry Pi') {
+            steps {
+                script {
+                    // ssh to Raspberry Pi
+                    sshCommand remote: [
+                        host: env.RASPBERRY_PI_IP,
+                        port: env.RASPBERRY_PI_PORT,
+                        user: env.RASPBERRY_PI_USER,
+                        password: env.RASPBERRY_PI_PASSWORD
+                    ], command: 'ls -l'
+                }
+            }
+        }
+
         stage('Check Docker Version') {
             steps {
                 sh 'docker --version'
